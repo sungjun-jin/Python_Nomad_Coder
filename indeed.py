@@ -33,11 +33,34 @@ def extract_indeed_pages() :
 
 def extract_indeed_jobs(last_page) :
     # indeed 사이트의 각 페이지 번호마다 URL을 request하기 위해 1부터 마지막 페이지인 10까지의 URL을 가져온다.
-    for page in range(0,last_page) :
+    jobs = []
+    # for page in range(0,last_page) :
       
-        result = requests.get(f"{URL}&start={page * LIMIT}") # 1~10 페이지의 URL을 request
+    result = requests.get(f"{URL}&start={0 * LIMIT}") # 1~10 페이지의 URL을 request       
+    soup = BeautifulSoup(result.text,'html.parser') #soup를 만들어 데이터를 추출 
+    results = soup.find_all("div", {"class" : "jobsearch-SerpJobCard"})
+    
+
+    for result in results :
+       
+        title = result.find("div",{"class": "title"})
+        anchor = title.find("a")["title"] # 속성(attribute)으로 추출하는 방법 : soup.find()["속성이름"], 한 줄로도 만들 수 있지만 익숙해질때까진 두 줄로 코딩하자 
+        # print(anchor)
+        company = result.find("span",{"class": "company"}) # company soup 생성 
+
+        # 링크 (anchor)가 있는 회사도 있고 없는 회사도 있으므로 anchor 태그 유무에 따라 분기처리를 해준다. 
         
-        print(f"{page} status code = {result.status_code}") # 각 페이지의 status code를 출력
+        company_anchor = company.find("a")
+        
+        if company_anchor is not None: 
+            company = str(company_anchor.string) # 원래 company 변수는 위에서 soup 였지만 string형으로 재할당이 가능하다.
+        else :
+            company = str(company.string)    
+
+        company = company.strip() # strip()은 문자열 양끝에 있는 공백을 지워준다 
+        print(company)
+
+    return jobs      
 
 
 extract_indeed_jobs(extract_indeed_pages())
