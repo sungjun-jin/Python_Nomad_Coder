@@ -36,7 +36,7 @@ def get_last_page() :
 def extract_jobs(last_page) :
     # indeed 사이트의 각 페이지 번호마다 URL을 request하기 위해 1부터 마지막 페이지인 10까지의 URL을 가져온다.
     jobs = []
-    for page in range(0,last_page) :
+    for page in range(0,5) :
         
         print(f"scraping page = {page}")
         result = requests.get(f"{URL}&start={page * LIMIT}") # 1~10 페이지의 URL을 request       

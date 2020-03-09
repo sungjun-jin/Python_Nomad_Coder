@@ -24,7 +24,7 @@ def extract_jobs(last_page) :
     jobs = []
     
     
-    for page in range(last_page) :
+    for page in range(5) :
         result = requests.get(f"{URL}&pg={page+1}") # 0 부터 시작하므로 
         print(f"printing stackoverflow page : {page+1}")
         soup = BeautifulSoup(result.text,"html.parser")        

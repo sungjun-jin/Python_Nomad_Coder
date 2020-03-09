@@ -3,15 +3,17 @@
 
 from indeed import get_jobs as get_indeed_jobs # indeed.py 에서 extract_indeed_pages() 함수를 import
 from stackoverflow import get_jobs as get_so_jobs # stackoverflow.py 에서 extract_indeed_pages() 함수를 import
+from save import save_to_file
 
-# indeed_jobs = get_indeed_jobs()
-so_jobs = get_so_jobs()
+
+# so_jobs = get_so_jobs()
 indeed_jobs = get_indeed_jobs()
+so_jobs = get_so_jobs()
+jobs = indeed_jobs + so_jobs
+save_to_file(jobs)
 
 
-jobs = so_jobs + indeed_jobs
 
-print(jobs)
  
 
 
