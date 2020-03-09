@@ -10,7 +10,9 @@ LIMIT = 50 # 한 페이지에 보여줄 구인광고 리스트의 수
 URL = f"https://kr.indeed.com/%EC%B7%A8%EC%97%85?q=python&limit={LIMIT}"
 
 
-def extract_indeed_pages() :
+def get_last_page() :
+
+    #indeed job search 결과의 마지막 페이지를 리턴해주는 함수 
 
     result = requests.get(URL)
 
@@ -31,27 +33,27 @@ def extract_indeed_pages() :
     return max_page
 
 
-def extract_indeed_jobs(last_page) :
+def extract_jobs(last_page) :
     # indeed 사이트의 각 페이지 번호마다 URL을 request하기 위해 1부터 마지막 페이지인 10까지의 URL을 가져온다.
     jobs = []
     for page in range(0,last_page) :
         
         print(f"scraping page = {page}")
         result = requests.get(f"{URL}&start={page * LIMIT}") # 1~10 페이지의 URL을 request       
-        soup = BeautifulSoup(result.text,'html.parser') #soup를 만들어 데이터를 추출 
+        soup = BeautifulSoup(result.text,"html.parser") #soup를 만들어 데이터를 추출 
         results = soup.find_all("div", {"class" : "jobsearch-SerpJobCard"})
     
 
     for result in results :
-        job = extract_jobs(result)
+        job = extract_job(result)
         jobs.append(job)
           
 
     return jobs            
-
+ 
         
 
-def extract_jobs(html) :
+def extract_job(html) :
 
     # title : 직무
     # company : 회사 
@@ -92,4 +94,10 @@ def extract_jobs(html) :
     return {"title" : title, 
     "company" : company, 
     "location" : location,     
-    }    
+    }
+
+def get_jobs() :
+
+    last_page = get_last_page()
+    jobs = extract_jobs(last_page)
+    return jobs          
